@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#orderTotal').textContent = formatter.format(mainTotal);
     }
 
-    quantityInputs.forEach(input => input.addEventListener('change', updateTotals));
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', updateTotals);
+        input.addEventListener('input', updateTotals);
+    });
     updateTotals();
 });

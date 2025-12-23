@@ -1,15 +1,20 @@
 /* B2B Form Styles - Extracted and Flattened from ACSS */
 
+/* --- General & Desktop Styles --- */
+
 .bulk-purchase-form .bulk-purchase-form__sticky-header {
     position: sticky;
-    top: 0;
+    top: 0; /* Adjust if there's a site header */
     padding: var(--space-m);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background-color: var(--primary);
-    z-index: 10;
+    color: var(--white, #fff);
+    z-index: 100;
+    margin-bottom: var(--space-m);
+    border-radius: var(--radius-m);
 }
 
 .bulk-purchase-form .bulk-purchase-form__total {
@@ -18,83 +23,183 @@
     font-weight: 700;
 }
 
+.bulk-purchase-form .bulk-purchase-form__submit-order {
+    background-color: var(--secondary);
+    color: var(--primary-dark);
+    border: none;
+    padding: var(--space-xs) var(--space-m);
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: var(--radius-s);
+    transition: background-color 0.3s ease;
+}
+
+.bulk-purchase-form .bulk-purchase-form__submit-order:hover {
+    background-color: var(--secondary-light);
+}
+
 .bulk-purchase-form .bulk-purchase-form__table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate; /* Changed to separate for border-radius on rows/cells if needed */
+    border-spacing: 0;
+    margin-bottom: var(--space-l);
 }
 
-.bulk-purchase-form .bulk-purchase-form__table-header {
-    background-color: var(--primary-ultra-light, #f0f0f0);
+.bulk-purchase-form .bulk-purchase-form__table-header th {
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
     text-align: left;
+    padding: var(--space-s);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary);
 }
 
-.bulk-purchase-form .bulk-purchase-form__table-header > th {
-    padding: var(--space-xs);
-    border: 1px solid var(--primary-dark);
-    min-width: var(--section-space-m);
-    max-width: var(--section-space-xxl);
+.bulk-purchase-form .bulk-purchase-form__product-row td {
+    border-bottom: 1px solid var(--base-light);
+    padding: var(--space-s);
+    vertical-align: top;
 }
 
-.bulk-purchase-form .bulk-purchase-form__product-row > td {
-    border: 1px solid var(--primary-dark);
-    padding: var(--space-xs);
-    min-width: var(--section-space-m);
-    max-width: var(--section-wide-m);
-    text-align: left;
+/* Product Info Column */
+.bulk-purchase-form .bulk-purchase-form__product-info {
+    font-weight: 600;
+    color: var(--primary-dark);
+    width: 30%;
 }
 
 .bulk-purchase-form .bulk-purchase-form__producer-name {
-    color: var(--primary);
+    font-weight: 400;
+    font-size: var(--text-s);
+    color: var(--text-light);
+    display: block;
+    margin-top: var(--space-xs);
 }
 
+/* Quantity Input */
 .bulk-purchase-form .bulk-purchase-form__quantity-input {
-    width: 60px;
-    padding: 5px;
+    width: 80px;
+    padding: var(--space-xs);
+    border: 1px solid var(--base-mid);
+    border-radius: var(--radius-s);
+    text-align: center;
+    font-size: var(--text-m);
 }
 
-/* Responsive styles for mobile screens (max-width of 720px) */
+/* --- Desktop Specific Logic for "Grouped" Look --- */
+@media screen and (min-width: 769px) {
+    /* Hide the product info text in subsequent variations to mimic rowspan */
+    .bulk-purchase-form__product-row.subsequent-variation .bulk-purchase-form__product-info span {
+        visibility: hidden; 
+    }
+    
+    /* Remove top border for subsequent variations to visually merge them */
+    .bulk-purchase-form__product-row.subsequent-variation td {
+        border-top: none;
+    }
+
+    /* Keep the bottom border only on the last variation of a group? 
+       Actually, standard table borders are fine, but let's make the internal variation borders lighter. */
+    .bulk-purchase-form__product-row.first-variation td {
+        border-top: 1px solid var(--base-mid);
+    }
+}
+
+/* --- Mobile Styles (max-width 768px) --- */
 @media screen and (max-width: 768px) {
+    .bulk-purchase-form .bulk-purchase-form__table, 
+    .bulk-purchase-form .bulk-purchase-form__table tbody, 
+    .bulk-purchase-form .bulk-purchase-form__product-row, 
+    .bulk-purchase-form .bulk-purchase-form__product-row td {
+        display: block;
+        width: 100%;
+    }
+
     .bulk-purchase-form .bulk-purchase-form__table-header {
-        display: none;
+        display: none; /* Hide standard table header */
     }
 
     .bulk-purchase-form .bulk-purchase-form__product-row {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: var(--space-xs);
-        border: 1px solid var(--primary-dark);
+        background-color: var(--white, #fff);
+        margin-bottom: var(--space-m);
+        border: 1px solid var(--base-light);
+        border-radius: var(--radius-m);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         padding: var(--space-s);
+        overflow: hidden;
     }
 
-    .bulk-purchase-form .bulk-purchase-form__product-row > td {
+    /* Styling the "Cells" as Rows in the Card */
+    .bulk-purchase-form .bulk-purchase-form__product-row td {
         border: none;
-        padding: var(--space-xs);
-        min-width: auto;
-        max-width: none;
-        text-align: left;
-        position: relative;
+        border-bottom: 1px solid var(--base-ultra-light);
+        padding: var(--space-xs) 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        text-align: right;
     }
 
-    .bulk-purchase-form .bulk-purchase-form__product-row > td::before {
+    .bulk-purchase-form .bulk-purchase-form__product-row td:last-child {
+        border-bottom: none;
+    }
+
+    /* Add Labels using data-column */
+    .bulk-purchase-form .bulk-purchase-form__product-row td::before {
         content: attr(data-column);
-        font-weight: bold;
-        display: inline-block;
-        margin-right: var(--space-xs);
-        color: var(--primary-dark);
+        font-weight: 700;
+        color: var(--text-mid);
+        text-align: left;
+        margin-right: var(--space-s);
+        flex-shrink: 0;
     }
 
-    /* Customize ::before content for specific cells */
-    .bulk-purchase-form .bulk-purchase-form__product-info::before {
-        content: "";
-        display: none;
+    /* Special styling for Product Name (Top of Card) */
+    .bulk-purchase-form .bulk-purchase-form__product-info {
+        background-color: var(--primary-ultra-light);
+        margin: calc(var(--space-s) * -1) calc(var(--space-s) * -1) var(--space-s) calc(var(--space-s) * -1); /* Negative margin to fill top */
+        padding: var(--space-s) !important;
+        width: calc(100% + (var(--space-s) * 2)) !important; /* Compensate for parent padding */
+        text-align: left !important;
+        display: block !important;
+        border-bottom: 1px solid var(--primary-light) !important;
     }
     
-    .bulk-purchase-form .bulk-purchase-form__product-info {
-        font-weight: bold;
-        background-color: var(--primary-ultra-light);
-        display: block;
+    .bulk-purchase-form .bulk-purchase-form__product-info::before {
+        display: none; /* Don't show "Producto" label */
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__product-name {
+        font-size: var(--text-l);
+        color: var(--primary);
+    }
+
+    /* Ensure subsequent variations SHOW their product info on mobile */
+    .bulk-purchase-form__product-row.subsequent-variation .bulk-purchase-form__product-info span {
+        visibility: visible !important;
+    }
+
+    /* Input Styling for Touch */
+    .bulk-purchase-form .bulk-purchase-form__quantity-input {
+        width: 100px;
+        height: 44px; /* Better touch target */
+        font-size: 1.1rem;
+    }
+
+    /* Sticky Header on Mobile */
+    .bulk-purchase-form .bulk-purchase-form__sticky-header {
+        padding: var(--space-s);
+        flex-direction: row; /* Keep row */
+        gap: var(--space-s);
+        border-radius: 0 0 var(--radius-m) var(--radius-m);
+        margin-bottom: var(--space-m);
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__total {
+        font-size: var(--text-m);
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__submit-order {
+        padding: var(--space-xs) var(--space-s);
+        font-size: var(--text-s);
     }
 }

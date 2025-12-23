@@ -66,20 +66,25 @@ function enhanced_woocommerce_product_display_shortcode() {
 
         if ($product->is_type("variable")) {
             $variations = $product->get_available_variations();
-            $variation_count = count($variations);
 
             foreach ($variations as $index => $variation) {
                 $variation_obj = new WC_Product_Variation($variation["variation_id"]);
                 $attributes = $variation_obj->get_attributes();
                 $attributes_text = implode(", ", array_map(function ($attr, $value) { return "$attr: $value"; }, array_keys($attributes), $attributes));
 
-                echo "<tr class='bulk-purchase-form__product-row'>";
-                if ($index === 0) {
-                    echo "<td class='bulk-purchase-form__product-info' data-column='Producto' rowspan='$variation_count'>";
-                    echo "<span class='bulk-purchase-form__product-name'>" . esc_html($product->get_name()) . "</span><br>";
-                    echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
-                    echo "</td>";
-                }
+                // Add a class to indicate if this is the first variation or a subsequent one (useful for styling)
+                $row_class = ($index === 0) ? 'bulk-purchase-form__product-row first-variation' : 'bulk-purchase-form__product-row subsequent-variation';
+
+                echo "<tr class='$row_class'>";
+                
+                // Always render the product info cell
+                echo "<td class='bulk-purchase-form__product-info' data-column='Producto'>";
+                // Only show the name/producer visually if it's the first variation OR on mobile (handled via CSS later)
+                // Actually, for simplicity and data integrity, let's just print it. 
+                // We can hide it visually on desktop for subsequent rows using CSS if desired.
+                echo "<span class='bulk-purchase-form__product-name'>" . esc_html($product->get_name()) . "</span><br>";
+                echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
+                echo "</td>";
 
                 echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text) . "</td>";
                 echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($variation_obj->get_price()) . "</td>";
