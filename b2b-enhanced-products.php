@@ -32,16 +32,16 @@ function b2b_enqueue_scripts() {
 
     if (is_specific_page($specific_page_slug) || $has_shortcode || $is_product_archive) {
         wp_enqueue_script('bulk-purchase-form', plugin_dir_url(__FILE__) . 'js/bulk-purchase-form.js', array('jquery'), '1.0', true);
-        wp_script_add_data('bulk-purchase-form', array('defer', 'async'), true);
+        obdc_add_script_attributes('bulk-purchase-form', array('defer', 'async'), true);
 
         wp_enqueue_script('sticky-header', plugin_dir_url(__FILE__) . 'js/sticky-header.js', array('jquery'), '1.0', true);
-        wp_script_add_data('sticky-header', array('defer', 'async'), true);
+        obdc_add_script_attributes('sticky-header', array('defer', 'async'), true);
     }
 }
 add_action('wp_enqueue_scripts', 'b2b_enqueue_scripts');
 
 // Add 'defer' and 'async' attributes to scripts
-function wp_script_add_data($handle, $attributes, $value) {
+function obdc_add_script_attributes($handle, $attributes, $value) {
     if (!is_array($attributes)) {
         $attributes = array($attributes);
     }
