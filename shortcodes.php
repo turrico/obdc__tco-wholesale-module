@@ -49,13 +49,15 @@ function enhanced_woocommerce_product_display_shortcode() {
     }
 
     $total = 0;
-    $checkout_url = wc_get_checkout_url();
+    // Changed to Cart URL
+    $cart_url = wc_get_cart_url();
 
     echo "<div class='bulk-purchase-form'>";
-    echo "<form action='" . esc_url($checkout_url) . "' method='post'>";
+    echo "<form action='" . esc_url($cart_url) . "' method='post'>";
     echo "<div class='bulk-purchase-form__sticky-header sticky'>";
     echo "<span class='bulk-purchase-form__total text--primary-ultra-light text--l text--bold'>Total: <span id='orderTotal'>" . number_format($total, 2, ",", ".") . "</span></span>";
-    echo "<button type='submit' class='bulk-purchase-form__submit-order btn--secondary'>Realizar Pedido</button>";
+    // Updated button text and classes
+    echo "<button type='submit' class='bulk-purchase-form__submit-order btn--secondary text--m text--bold'>Actualizar Carrito</button>";
     echo "</div>";
     echo "<table class='bulk-purchase-form__table'>";
     echo "<thead><tr class='bulk-purchase-form__table-header'><th>Producto</th><th>Características</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr></thead>";
@@ -153,7 +155,8 @@ function handle_product_form_submission() {
                     WC()->cart->add_to_cart($product_id, $qty);
                 }
             }
-            wp_redirect(wc_get_checkout_url());
+            // Redirect to Cart URL
+            wp_redirect(wc_get_cart_url());
             exit();
         }
     }
