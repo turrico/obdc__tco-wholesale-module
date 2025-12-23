@@ -71,6 +71,7 @@
     .bulk-purchase-form .bulk-purchase-form__table {
         display: block;
         width: 100%;
+        /* Remove overflow hidden from parent if stickiness fails */
     }
     
     .bulk-purchase-form .bulk-purchase-form__table-header {
@@ -80,23 +81,26 @@
     .bulk-purchase-form .bulk-purchase-form__table tbody.product-group {
         display: block;
         background-color: var(--white, #fff);
-        margin-bottom: var(--space-xl); /* More space between products */
-        border-bottom: 2px solid var(--base-light);
-        overflow: visible;
+        margin-bottom: var(--space-xl);
+        border-bottom: 1px solid var(--base-light);
+        overflow: visible; /* Vital for sticky children */
         position: relative;
     }
 
     /* --- Full Width Sticky Header --- */
     .bulk-purchase-form .mobile-product-header {
         display: block !important;
+        position: -webkit-sticky; /* For Safari */
         position: sticky;
-        top: 0; /* Sticks to the very top or below sticky total */
+        /* Set top to account for the sticky form header (approx 60-70px) */
+        top: 60px; 
         z-index: 50;
-        background-color: var(--primary-dark);
-        color: white;
+        background-color: var(--primary-ultra-light); /* Restored color */
+        color: var(--primary-dark);
         width: 100vw;
-        margin-left: calc(50% - 50vw); /* Break out of container to be 100vw */
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-left: calc(50% - 50vw); /* Break out to full width */
+        border-bottom: 1px solid var(--primary-light);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     
     .bulk-purchase-form .mobile-product-header td {
@@ -109,16 +113,15 @@
 
     .bulk-purchase-form .bulk-purchase-form__product-name {
         font-size: var(--text-m);
-        color: var(--secondary);
+        color: var(--primary);
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
     }
 
     .bulk-purchase-form .bulk-purchase-form__producer-name {
         font-size: var(--text-xs);
-        color: var(--primary-ultra-light);
-        opacity: 0.9;
+        color: var(--text-light);
     }
 
     .bulk-purchase-form .bulk-purchase-form__product-info {
@@ -161,6 +164,7 @@
     .bulk-purchase-form .bulk-purchase-form__sticky-header {
         border-radius: 0;
         margin-bottom: 0;
+        position: -webkit-sticky;
         position: sticky;
         top: 0;
         z-index: 100;
