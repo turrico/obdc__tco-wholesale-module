@@ -58,33 +58,35 @@ function enhanced_woocommerce_product_display_shortcode() {
     echo "<button type='submit' class='bulk-purchase-form__submit-order btn--secondary'>Realizar Pedido</button>";
     echo "</div>";
     echo "<table class='bulk-purchase-form__table'>";
-    echo "<tr class='bulk-purchase-form__table-header'><th>Producto</th><th>Características</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr>";
+    echo "<thead><tr class='bulk-purchase-form__table-header'><th>Producto</th><th>Características</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr></thead>";
 
     foreach ($products as $product) {
         $producer_name = get_producer_name_by_product($product->get_id(), "producto-productor-relationship");
         $display_producer_name = !empty($producer_name) ? $producer_name : "No producer found";
 
+        // Wrap each product in a tbody for grouping
+        echo "<tbody class='product-group'>";
+
         if ($product->is_type("variable")) {
             $variations = $product->get_available_variations();
+            $variation_count = count($variations);
 
             foreach ($variations as $index => $variation) {
                 $variation_obj = new WC_Product_Variation($variation["variation_id"]);
                 $attributes = $variation_obj->get_attributes();
                 $attributes_text = implode(", ", array_map(function ($attr, $value) { return "$attr: $value"; }, array_keys($attributes), $attributes));
 
-                // Add a class to indicate if this is the first variation or a subsequent one (useful for styling)
                 $row_class = ($index === 0) ? 'bulk-purchase-form__product-row first-variation' : 'bulk-purchase-form__product-row subsequent-variation';
 
                 echo "<tr class='$row_class'>";
                 
-                // Always render the product info cell
-                echo "<td class='bulk-purchase-form__product-info' data-column='Producto'>";
-                // Only show the name/producer visually if it's the first variation OR on mobile (handled via CSS later)
-                // Actually, for simplicity and data integrity, let's just print it. 
-                // We can hide it visually on desktop for subsequent rows using CSS if desired.
-                echo "<span class='bulk-purchase-form__product-name'>" . esc_html($product->get_name()) . "</span><br>";
-                echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
-                echo "</td>";
+                // Only render product info for the first variation
+                if ($index === 0) {
+                    echo "<td class='bulk-purchase-form__product-info' data-column='Producto' rowspan='$variation_count'>";
+                    echo "<span class='bulk-purchase-form__product-name'>" . esc_html($product->get_name()) . "</span><br>";
+                    echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
+                    echo "</td>";
+                }
 
                 echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text) . "</td>";
                 echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($variation_obj->get_price()) . "</td>";
@@ -107,6 +109,8 @@ function enhanced_woocommerce_product_display_shortcode() {
             echo "<td class='bulk-purchase-form__product-total' data-column='Total'>₡0.00</td>";
             echo "</tr>";
         }
+        
+        echo "</tbody>";
     }
 
     echo "</table>";

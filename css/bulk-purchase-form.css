@@ -40,7 +40,7 @@
 
 .bulk-purchase-form .bulk-purchase-form__table {
     width: 100%;
-    border-collapse: separate; /* Changed to separate for border-radius on rows/cells if needed */
+    border-collapse: separate;
     border-spacing: 0;
     margin-bottom: var(--space-l);
 }
@@ -85,66 +85,53 @@
     font-size: var(--text-m);
 }
 
-/* --- Desktop Specific Logic for "Grouped" Look --- */
-@media screen and (min-width: 769px) {
-    /* Hide the product info text in subsequent variations to mimic rowspan */
-    .bulk-purchase-form__product-row.subsequent-variation .bulk-purchase-form__product-info span {
-        visibility: hidden; 
-    }
-    
-    /* Remove top border for subsequent variations to visually merge them */
-    .bulk-purchase-form__product-row.subsequent-variation td {
-        border-top: none;
-    }
-
-    /* Keep the bottom border only on the last variation of a group? 
-       Actually, standard table borders are fine, but let's make the internal variation borders lighter. */
-    .bulk-purchase-form__product-row.first-variation td {
-        border-top: 1px solid var(--base-mid);
-    }
-}
-
 /* --- Mobile Styles (max-width 768px) --- */
 @media screen and (max-width: 768px) {
-    .bulk-purchase-form .bulk-purchase-form__table, 
-    .bulk-purchase-form .bulk-purchase-form__table tbody, 
-    .bulk-purchase-form .bulk-purchase-form__product-row, 
-    .bulk-purchase-form .bulk-purchase-form__product-row td {
+    .bulk-purchase-form .bulk-purchase-form__table {
         display: block;
         width: 100%;
     }
-
+    
     .bulk-purchase-form .bulk-purchase-form__table-header {
         display: none; /* Hide standard table header */
     }
 
-    .bulk-purchase-form .bulk-purchase-form__product-row {
+    /* TBODY acts as the Card Container */
+    .bulk-purchase-form .bulk-purchase-form__table tbody.product-group {
+        display: block;
         background-color: var(--white, #fff);
         margin-bottom: var(--space-m);
         border: 1px solid var(--base-light);
         border-radius: var(--radius-m);
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        padding: var(--space-s);
-        overflow: hidden;
+        overflow: hidden; /* Contains the header background */
     }
 
-    /* Styling the "Cells" as Rows in the Card */
+    /* Rows inside the Card */
+    .bulk-purchase-form .bulk-purchase-form__product-row {
+        display: flex;
+        flex-wrap: wrap; /* Allow wrapping */
+        padding: var(--space-s);
+        border-bottom: 1px solid var(--base-ultra-light);
+    }
+    
+    .bulk-purchase-form .bulk-purchase-form__product-row:last-child {
+        border-bottom: none;
+    }
+
+    /* Table Cells as Flex Items */
     .bulk-purchase-form .bulk-purchase-form__product-row td {
         border: none;
-        border-bottom: 1px solid var(--base-ultra-light);
         padding: var(--space-xs) 0;
         display: flex;
         justify-content: space-between;
         align-items: center;
         text-align: right;
-    }
-
-    .bulk-purchase-form .bulk-purchase-form__product-row td:last-child {
-        border-bottom: none;
+        width: 100%; /* Full width rows by default */
     }
 
     /* Add Labels using data-column */
-    .bulk-purchase-form .bulk-purchase-form__product-row td::before {
+    .bulk-purchase-form .bulk-purchase-form__product-row td:not(.bulk-purchase-form__product-info)::before {
         content: attr(data-column);
         font-weight: 700;
         color: var(--text-mid);
@@ -153,19 +140,19 @@
         flex-shrink: 0;
     }
 
-    /* Special styling for Product Name (Top of Card) */
+    /* ---- Card Header (First Row Logic) ---- */
+    
+    /* Product Name / Header Styling */
     .bulk-purchase-form .bulk-purchase-form__product-info {
         background-color: var(--primary-ultra-light);
-        margin: calc(var(--space-s) * -1) calc(var(--space-s) * -1) var(--space-s) calc(var(--space-s) * -1); /* Negative margin to fill top */
+        /* Negative margins to pull it out of the row padding to fill full width/top */
+        margin: calc(var(--space-s) * -1) calc(var(--space-s) * -1) var(--space-s) calc(var(--space-s) * -1); 
         padding: var(--space-s) !important;
-        width: calc(100% + (var(--space-s) * 2)) !important; /* Compensate for parent padding */
+        width: calc(100% + (var(--space-s) * 2)) !important;
         text-align: left !important;
         display: block !important;
         border-bottom: 1px solid var(--primary-light) !important;
-    }
-    
-    .bulk-purchase-form .bulk-purchase-form__product-info::before {
-        display: none; /* Don't show "Producto" label */
+        order: -1; /* Ensure it stays at top of flex container */
     }
 
     .bulk-purchase-form .bulk-purchase-form__product-name {
@@ -173,9 +160,14 @@
         color: var(--primary);
     }
 
-    /* Ensure subsequent variations SHOW their product info on mobile */
-    .bulk-purchase-form__product-row.subsequent-variation .bulk-purchase-form__product-info span {
-        visibility: visible !important;
+    /* --- Variation Rows (Subsequent rows in the same tbody) --- */
+    
+    /* On subsequent rows, there is NO .product-info cell (per PHP change). 
+       So these rows just contain: Attributes | Price | Qty | Total 
+       We style them as a sub-block. */
+       
+    .bulk-purchase-form__product-row.subsequent-variation {
+        background-color: var(--base-ultra-light-transparent, #fafafa); /* Slight distinction */
     }
 
     /* Input Styling for Touch */
@@ -188,7 +180,7 @@
     /* Sticky Header on Mobile */
     .bulk-purchase-form .bulk-purchase-form__sticky-header {
         padding: var(--space-s);
-        flex-direction: row; /* Keep row */
+        flex-direction: row; 
         gap: var(--space-s);
         border-radius: 0 0 var(--radius-m) var(--radius-m);
         margin-bottom: var(--space-m);
