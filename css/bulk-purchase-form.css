@@ -85,6 +85,11 @@
     font-size: var(--text-m);
 }
 
+/* Hide Mobile Header on Desktop */
+.bulk-purchase-form .mobile-product-header {
+    display: none;
+}
+
 /* --- Mobile Styles (max-width 768px) --- */
 @media screen and (max-width: 768px) {
     .bulk-purchase-form .bulk-purchase-form__table {
@@ -104,10 +109,40 @@
         border: 1px solid var(--base-light);
         border-radius: var(--radius-m);
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        overflow: hidden; /* Contains the header background */
+        overflow: visible; /* Must be visible for sticky children */
+        position: relative; /* Context for children */
     }
 
-    /* Rows inside the Card */
+    /* --- New Mobile Sticky Header Row --- */
+    .bulk-purchase-form .mobile-product-header {
+        display: block !important;
+        position: sticky;
+        top: 85px; /* Adjust based on Global Header Height */
+        z-index: 50; /* Above content, below Global Header (100) */
+        background-color: var(--primary-ultra-light);
+        border-bottom: 1px solid var(--primary-light);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .bulk-purchase-form .mobile-product-header td {
+        display: block;
+        padding: var(--space-s);
+        width: 100%;
+        text-align: left;
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__product-name {
+        font-size: var(--text-l);
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    /* Hide the ORIGINAL Product Info Cell on Mobile (since we use the header row) */
+    .bulk-purchase-form .bulk-purchase-form__product-info {
+        display: none !important;
+    }
+
+    /* --- Variation Rows --- */
     .bulk-purchase-form .bulk-purchase-form__product-row {
         display: flex;
         flex-wrap: wrap; /* Allow wrapping */
@@ -117,6 +152,10 @@
     
     .bulk-purchase-form .bulk-purchase-form__product-row:last-child {
         border-bottom: none;
+    }
+    
+    .bulk-purchase-form__product-row.subsequent-variation {
+        background-color: var(--base-ultra-light-transparent, #fafafa); 
     }
 
     /* Table Cells as Flex Items */
@@ -138,36 +177,6 @@
         text-align: left;
         margin-right: var(--space-s);
         flex-shrink: 0;
-    }
-
-    /* ---- Card Header (First Row Logic) ---- */
-    
-    /* Product Name / Header Styling */
-    .bulk-purchase-form .bulk-purchase-form__product-info {
-        background-color: var(--primary-ultra-light);
-        /* Negative margins to pull it out of the row padding to fill full width/top */
-        margin: calc(var(--space-s) * -1) calc(var(--space-s) * -1) var(--space-s) calc(var(--space-s) * -1); 
-        padding: var(--space-s) !important;
-        width: calc(100% + (var(--space-s) * 2)) !important;
-        text-align: left !important;
-        display: block !important;
-        border-bottom: 1px solid var(--primary-light) !important;
-        order: -1; /* Ensure it stays at top of flex container */
-    }
-
-    .bulk-purchase-form .bulk-purchase-form__product-name {
-        font-size: var(--text-l);
-        color: var(--primary);
-    }
-
-    /* --- Variation Rows (Subsequent rows in the same tbody) --- */
-    
-    /* On subsequent rows, there is NO .product-info cell (per PHP change). 
-       So these rows just contain: Attributes | Price | Qty | Total 
-       We style them as a sub-block. */
-       
-    .bulk-purchase-form__product-row.subsequent-variation {
-        background-color: var(--base-ultra-light-transparent, #fafafa); /* Slight distinction */
     }
 
     /* Input Styling for Touch */

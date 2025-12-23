@@ -67,6 +67,15 @@ function enhanced_woocommerce_product_display_shortcode() {
         // Wrap each product in a tbody for grouping
         echo "<tbody class='product-group'>";
 
+        // --- Mobile-Only Sticky Header Row ---
+        echo "<tr class='mobile-product-header' style='display:none;'>";
+        echo "<td colspan='5'>";
+        echo "<span class='bulk-purchase-form__product-name'>" . esc_html($product->get_name()) . "</span><br>";
+        echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
+        echo "</td>";
+        echo "</tr>";
+        // -------------------------------------
+
         if ($product->is_type("variable")) {
             $variations = $product->get_available_variations();
             $variation_count = count($variations);
