@@ -48,6 +48,17 @@ function enhanced_woocommerce_product_display_shortcode() {
         return ob_get_clean();
     }
 
+    // --- Preload Cart Quantities ---
+    $cart_quantities = [];
+    if (WC()->cart) {
+        foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
+            $product_id = $cart_item['data']->get_id();
+            // Handle variations: get_id() returns variation ID for variations
+            $cart_quantities[$product_id] = $cart_item['quantity'];
+        }
+    }
+    // -------------------------------
+
     $total = 0;
     // Changed to Cart URL
     $cart_url = wc_get_cart_url();
@@ -89,6 +100,9 @@ function enhanced_woocommerce_product_display_shortcode() {
 
                 $row_class = ($index === 0) ? 'bulk-purchase-form__product-row first-variation' : 'bulk-purchase-form__product-row subsequent-variation';
 
+                // Get current quantity from cart if available
+                $current_qty = isset($cart_quantities[$variation["variation_id"]]) ? $cart_quantities[$variation["variation_id"]] : 0;
+
                 echo "<tr class='$row_class'>";
                 
                 // Only render product info for the first variation
@@ -101,13 +115,16 @@ function enhanced_woocommerce_product_display_shortcode() {
 
                 echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text) . "</td>";
                 echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($variation_obj->get_price()) . "</td>";
-                echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($variation_obj->get_id()) . "]' value='0' min='0' step='1'></td>";
+                echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($variation_obj->get_id()) . "]' value='" . esc_attr($current_qty) . "' min='0' step='1'></td>";
                 echo "<td class='bulk-purchase-form__product-total' data-column='Total'>₡0.00</td>";
                 echo "</tr>";
             }
         } else {
             $attributes = $product->get_attributes();
             $attributes_text = implode(", ", array_map(function ($attr) use ($product) { return $attr->get_name() . ": " . $product->get_attribute($attr->get_name()); }, $attributes));
+
+            // Get current quantity from cart if available
+            $current_qty = isset($cart_quantities[$product->get_id()]) ? $cart_quantities[$product->get_id()] : 0;
 
             echo "<tr class='bulk-purchase-form__product-row'>";
             echo "<td class='bulk-purchase-form__product-info' data-column='Producto'>";
@@ -116,7 +133,7 @@ function enhanced_woocommerce_product_display_shortcode() {
             echo "</td>";
             echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text ?: "N/A") . "</td>";
             echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($product->get_price()) . "</td>";
-            echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($product->get_id()) . "]' value='0' min='0' step='1'></td>";
+            echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($product->get_id()) . "]' value='" . esc_attr($current_qty) . "' min='0' step='1'></td>";
             echo "<td class='bulk-purchase-form__product-total' data-column='Total'>₡0.00</td>";
             echo "</tr>";
         }
@@ -149,9 +166,17 @@ function handle_product_form_submission() {
     if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST["quantity"])) {
         $quantities = $_POST["quantity"];
         if (is_array($quantities)) {
-            WC()->cart->empty_cart();
             foreach ($quantities as $product_id => $qty) {
-                if ($qty > 0) {
+                $qty = intval($qty);
+                $cart_item_key = WC()->cart->find_product_in_cart($product_id);
+                
+                if ($cart_item_key) {
+                    if ($qty > 0) {
+                        WC()->cart->set_quantity($cart_item_key, $qty);
+                    } else {
+                        WC()->cart->remove_cart_item($cart_item_key);
+                    }
+                } elseif ($qty > 0) {
                     WC()->cart->add_to_cart($product_id, $qty);
                 }
             }

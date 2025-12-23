@@ -1,10 +1,10 @@
-/* B2B Form Styles - Extracted and Flattened from ACSS */
+/* B2B Form Styles - Optimized for Mobile Sticky Headers */
 
 /* --- General & Desktop Styles --- */
 
 .bulk-purchase-form .bulk-purchase-form__sticky-header {
     position: sticky;
-    top: 0; /* Adjust if there's a site header */
+    top: 0;
     padding: var(--space-m);
     display: flex;
     justify-content: space-between;
@@ -21,13 +21,6 @@
     color: var(--primary-ultra-light, #fff);
     font-size: var(--text-l, 1.25rem);
     font-weight: 700;
-}
-
-/* Button Styling via ACSS classes in HTML, but ensuring defaults here just in case */
-.bulk-purchase-form .bulk-purchase-form__submit-order {
-    /* Base styles are handled by btn--secondary class. 
-       Adding specific spacing if needed */
-    margin-left: var(--space-s);
 }
 
 .bulk-purchase-form .bulk-purchase-form__table {
@@ -52,34 +45,23 @@
     vertical-align: top;
 }
 
-/* Product Info Column */
 .bulk-purchase-form .bulk-purchase-form__product-info {
     font-weight: 600;
     color: var(--primary-dark);
     width: 30%;
 }
 
-.bulk-purchase-form .bulk-purchase-form__producer-name {
-    font-weight: 400;
-    font-size: var(--text-s);
-    color: var(--text-light);
-    display: block;
-    margin-top: var(--space-xs);
-}
-
-/* Quantity Input */
 .bulk-purchase-form .bulk-purchase-form__quantity-input {
     width: 80px;
     padding: var(--space-xs);
     border: 1px solid var(--base-mid);
     border-radius: var(--radius-s);
     text-align: center;
-    font-size: var(--text-m); /* Increased font size */
+    font-size: var(--text-m);
     font-weight: 600;
     color: var(--text-dark);
 }
 
-/* Hide Mobile Header on Desktop */
 .bulk-purchase-form .mobile-product-header {
     display: none;
 }
@@ -92,46 +74,53 @@
     }
     
     .bulk-purchase-form .bulk-purchase-form__table-header {
-        display: none; /* Hide standard table header */
+        display: none;
     }
 
-    /* TBODY acts as the Card Container */
     .bulk-purchase-form .bulk-purchase-form__table tbody.product-group {
         display: block;
         background-color: var(--white, #fff);
-        margin-bottom: var(--space-m);
-        border: 1px solid var(--base-light);
-        border-radius: var(--radius-m);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        overflow: visible; /* Must be visible for sticky children */
-        position: relative; /* Context for children */
+        margin-bottom: var(--space-xl); /* More space between products */
+        border-bottom: 2px solid var(--base-light);
+        overflow: visible;
+        position: relative;
     }
 
-    /* --- New Mobile Sticky Header Row --- */
+    /* --- Full Width Sticky Header --- */
     .bulk-purchase-form .mobile-product-header {
         display: block !important;
         position: sticky;
-        top: 85px; /* Adjust based on Global Header Height */
-        z-index: 50; /* Above content, below Global Header (100) */
-        background-color: var(--primary-ultra-light);
-        border-bottom: 1px solid var(--primary-light);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        top: 0; /* Sticks to the very top or below sticky total */
+        z-index: 50;
+        background-color: var(--primary-dark);
+        color: white;
+        width: 100vw;
+        margin-left: calc(50% - 50vw); /* Break out of container to be 100vw */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
     .bulk-purchase-form .mobile-product-header td {
         display: block;
-        padding: var(--space-s);
+        padding: var(--space-s) var(--space-m);
         width: 100%;
         text-align: left;
+        border: none;
     }
 
     .bulk-purchase-form .bulk-purchase-form__product-name {
-        font-size: var(--text-l);
-        color: var(--primary);
+        font-size: var(--text-m);
+        color: var(--secondary);
         font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
-    /* Hide the ORIGINAL Product Info Cell on Mobile (since we use the header row) */
+    .bulk-purchase-form .bulk-purchase-form__producer-name {
+        font-size: var(--text-xs);
+        color: var(--primary-ultra-light);
+        opacity: 0.9;
+    }
+
     .bulk-purchase-form .bulk-purchase-form__product-info {
         display: none !important;
     }
@@ -139,20 +128,11 @@
     /* --- Variation Rows --- */
     .bulk-purchase-form .bulk-purchase-form__product-row {
         display: flex;
-        flex-wrap: wrap; /* Allow wrapping */
-        padding: var(--space-s);
+        flex-wrap: wrap;
+        padding: var(--space-m) var(--space-s);
         border-bottom: 1px solid var(--base-ultra-light);
     }
     
-    .bulk-purchase-form .bulk-purchase-form__product-row:last-child {
-        border-bottom: none;
-    }
-    
-    .bulk-purchase-form__product-row.subsequent-variation {
-        background-color: var(--base-ultra-light-transparent, #fafafa); 
-    }
-
-    /* Table Cells as Flex Items */
     .bulk-purchase-form .bulk-purchase-form__product-row td {
         border: none;
         padding: var(--space-xs) 0;
@@ -160,44 +140,31 @@
         justify-content: space-between;
         align-items: center;
         text-align: right;
-        width: 100%; /* Full width rows by default */
+        width: 100%;
     }
 
-    /* Add Labels using data-column */
-    .bulk-purchase-form .bulk-purchase-form__product-row td:not(.bulk-purchase-form__product-info)::before {
+    .bulk-purchase-form .bulk-purchase-form__product-row td::before {
         content: attr(data-column);
         font-weight: 700;
         color: var(--text-mid);
         text-align: left;
-        margin-right: var(--space-s);
-        flex-shrink: 0;
+        font-size: var(--text-s);
     }
 
-    /* Input Styling for Touch */
     .bulk-purchase-form .bulk-purchase-form__quantity-input {
-        width: 100px;
-        height: 48px; /* Increased touch target */
-        font-size: var(--text-l); /* Larger font for mobile inputs */
-        padding: var(--space-xs) var(--space-s);
-    }
-
-    /* Sticky Header on Mobile */
-    .bulk-purchase-form .bulk-purchase-form__sticky-header {
-        padding: var(--space-s);
-        flex-direction: row; 
-        gap: var(--space-s);
-        border-radius: 0 0 var(--radius-m) var(--radius-m);
-        margin-bottom: var(--space-m);
-        top: 0; /* Ensures it sticks to the very top */
-    }
-
-    .bulk-purchase-form .bulk-purchase-form__total {
+        width: 120px;
+        height: 50px;
         font-size: var(--text-m);
     }
 
-    /* Button on mobile */
-    .bulk-purchase-form .bulk-purchase-form__submit-order {
-        padding: var(--space-xs) var(--space-s);
-        /* Font size controlled by class text--m */
+    /* Floating Sticky Header for Totals */
+    .bulk-purchase-form .bulk-purchase-form__sticky-header {
+        border-radius: 0;
+        margin-bottom: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
     }
 }
