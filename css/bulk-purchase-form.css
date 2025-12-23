@@ -1,0 +1,100 @@
+/* B2B Form Styles - Extracted and Flattened from ACSS */
+
+.bulk-purchase-form .bulk-purchase-form__sticky-header {
+    position: sticky;
+    top: 0;
+    padding: var(--space-m);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    background-color: var(--primary);
+    z-index: 10;
+}
+
+.bulk-purchase-form .bulk-purchase-form__total {
+    color: var(--primary-ultra-light, #fff);
+    font-size: var(--text-l, 1.25rem);
+    font-weight: 700;
+}
+
+.bulk-purchase-form .bulk-purchase-form__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bulk-purchase-form .bulk-purchase-form__table-header {
+    background-color: var(--primary-ultra-light, #f0f0f0);
+    text-align: left;
+}
+
+.bulk-purchase-form .bulk-purchase-form__table-header > th {
+    padding: var(--space-xs);
+    border: 1px solid var(--primary-dark);
+    min-width: var(--section-space-m);
+    max-width: var(--section-space-xxl);
+}
+
+.bulk-purchase-form .bulk-purchase-form__product-row > td {
+    border: 1px solid var(--primary-dark);
+    padding: var(--space-xs);
+    min-width: var(--section-space-m);
+    max-width: var(--section-wide-m);
+    text-align: left;
+}
+
+.bulk-purchase-form .bulk-purchase-form__producer-name {
+    color: var(--primary);
+}
+
+.bulk-purchase-form .bulk-purchase-form__quantity-input {
+    width: 60px;
+    padding: 5px;
+}
+
+/* Responsive styles for mobile screens (max-width of 720px) */
+@media screen and (max-width: 768px) {
+    .bulk-purchase-form .bulk-purchase-form__table-header {
+        display: none;
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__product-row {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: var(--space-xs);
+        border: 1px solid var(--primary-dark);
+        padding: var(--space-s);
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__product-row > td {
+        border: none;
+        padding: var(--space-xs);
+        min-width: auto;
+        max-width: none;
+        text-align: left;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__product-row > td::before {
+        content: attr(data-column);
+        font-weight: bold;
+        display: inline-block;
+        margin-right: var(--space-xs);
+        color: var(--primary-dark);
+    }
+
+    /* Customize ::before content for specific cells */
+    .bulk-purchase-form .bulk-purchase-form__product-info::before {
+        content: "";
+        display: none;
+    }
+    
+    .bulk-purchase-form .bulk-purchase-form__product-info {
+        font-weight: bold;
+        background-color: var(--primary-ultra-light);
+        display: block;
+    }
+}
