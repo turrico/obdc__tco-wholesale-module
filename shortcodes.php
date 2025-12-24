@@ -31,6 +31,10 @@ function get_producer_name_by_product($product_id, $relationship_id) {
 function enhanced_woocommerce_product_display_shortcode() {
     ob_start();
 
+    // Enqueue scripts and styles ONLY when shortcode is used
+    wp_enqueue_style("bulk-purchase-form-css");
+    wp_enqueue_script("bulk-purchase-form");
+
     if (!function_exists("wc_get_products")) {
         echo "<p class='wc-no-products'>WooCommerce is not active!</p>";
         return ob_get_clean();

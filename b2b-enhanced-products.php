@@ -19,32 +19,17 @@ function is_specific_page($page_slug) {
 }
 
 // Enqueue JavaScript files
-function b2b_enqueue_scripts() {
-    global $post;
+function b2b_register_scripts() {
+    // Register styles and scripts so they can be enqueued on demand by the shortcode
+    wp_register_style('bulk-purchase-form-css', plugin_dir_url(__FILE__) . 'css/bulk-purchase-form.css', array(), '1.0');
 
-    // Load scripts if:
-    // 1. We're on the specific wholesale page
-    // 2. The shortcode is present in the content
-    // 3. We're on the product archive (for tabs implementation)
-    // 4. We're on the main shop page
-    // 5. We're previewing in Bricks Builder
-    $specific_page_slug = 'formulario-de-compra';
-    $has_shortcode = is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'enhanced_wc_products');
-    $is_product_archive = is_post_type_archive('product');
-    $is_shop = function_exists('is_shop') && is_shop();
-    $is_bricks_preview = isset($_GET['bricks_preview']);
+    wp_register_script('bulk-purchase-form', plugin_dir_url(__FILE__) . 'js/bulk-purchase-form.js', array('jquery'), '1.0', true);
+    obdc_add_script_attributes('bulk-purchase-form', array('defer', 'async'), true);
 
-    if (is_specific_page($specific_page_slug) || $has_shortcode || $is_product_archive || $is_shop || $is_bricks_preview) {
-        wp_enqueue_style('bulk-purchase-form-css', plugin_dir_url(__FILE__) . 'css/bulk-purchase-form.css', array(), '1.0');
-
-        wp_enqueue_script('bulk-purchase-form', plugin_dir_url(__FILE__) . 'js/bulk-purchase-form.js', array('jquery'), '1.0', true);
-        obdc_add_script_attributes('bulk-purchase-form', array('defer', 'async'), true);
-
-        wp_enqueue_script('sticky-header', plugin_dir_url(__FILE__) . 'js/sticky-header.js', array('jquery'), '1.0', true);
-        obdc_add_script_attributes('sticky-header', array('defer', 'async'), true);
-    }
+    wp_register_script('sticky-header', plugin_dir_url(__FILE__) . 'js/sticky-header.js', array('jquery'), '1.0', true);
+    obdc_add_script_attributes('sticky-header', array('defer', 'async'), true);
 }
-add_action('wp_enqueue_scripts', 'b2b_enqueue_scripts');
+add_action('wp_enqueue_scripts', 'b2b_register_scripts');
 
 // Add 'defer' and 'async' attributes to scripts
 function obdc_add_script_attributes($handle, $attributes, $value) {
