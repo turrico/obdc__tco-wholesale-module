@@ -78,27 +78,29 @@
         display: none;
     }
 
+    /* Entire Product Container breakout to 100vw */
     .bulk-purchase-form .bulk-purchase-form__table tbody.product-group {
         display: block;
         background-color: var(--white, #fff);
-        margin-bottom: var(--space-xl);
+        margin-bottom: 0; /* Removed margin between products */
         border-bottom: 1px solid var(--base-light);
         overflow: visible;
         position: relative;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
     }
 
-    /* --- Full Width Sticky Header --- */
+    /* --- Full Width Sticky Header for each Product --- */
     .bulk-purchase-form .mobile-product-header {
         display: block !important;
         position: -webkit-sticky;
         position: sticky;
-        /* DYNAMIC OFFSET: Uses JS-calculated variable */
         top: var(--sticky-header-height, 60px); 
         z-index: 50;
         background-color: var(--primary-ultra-light);
         color: var(--primary-dark);
-        width: 100vw;
-        margin-left: calc(50% - 50vw);
+        width: 100%; /* Inherits 100vw from tbody */
         border-bottom: 1px solid var(--primary-light);
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
@@ -132,7 +134,7 @@
     .bulk-purchase-form .bulk-purchase-form__product-row {
         display: flex;
         flex-wrap: wrap;
-        padding: var(--space-m) var(--space-s);
+        padding: var(--space-m) var(--space-m); /* Added side padding to match text alignment */
         border-bottom: 1px solid var(--base-ultra-light);
     }
     
@@ -155,12 +157,12 @@
     }
 
     .bulk-purchase-form .bulk-purchase-form__quantity-input {
-        width: 120px;
-        height: 50px;
+        width: 100px;
+        height: 48px;
         font-size: var(--text-m);
     }
 
-    /* Floating Sticky Header for Totals */
+    /* Floating Sticky Header for Totals breakout to 100vw */
     .bulk-purchase-form .bulk-purchase-form__sticky-header {
         border-radius: 0;
         margin-bottom: 0;
@@ -170,5 +172,11 @@
         z-index: 100;
         width: 100vw;
         margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        padding: var(--space-s) var(--space-m);
+    }
+
+    .bulk-purchase-form .bulk-purchase-form__total {
+        font-size: var(--text-m);
     }
 }
