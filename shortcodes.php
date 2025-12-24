@@ -118,7 +118,8 @@ function enhanced_woocommerce_product_display_shortcode() {
                 }
 
                 echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text) . "</td>";
-                echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($variation_obj->get_price()) . "</td>";
+                // Added data-price attribute
+                echo "<td class='bulk-purchase-form__product-price' data-column='Precio' data-price='" . esc_attr($variation_obj->get_price()) . "'>" . format_currency_colones($variation_obj->get_price()) . "</td>";
                 echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($variation_obj->get_id()) . "]' value='" . esc_attr($current_qty) . "' min='0' step='1' inputmode='numeric' pattern='[0-9]*'></td>";
                 echo "<td class='bulk-purchase-form__product-total' data-column='Total'>₡0.00</td>";
                 echo "</tr>";
@@ -136,7 +137,8 @@ function enhanced_woocommerce_product_display_shortcode() {
             echo "<span class='bulk-purchase-form__producer-name'>" . esc_html($display_producer_name) . "</span>";
             echo "</td>";
             echo "<td class='bulk-purchase-form__product-details' data-column='Características'>" . esc_html($attributes_text ?: "N/A") . "</td>";
-            echo "<td class='bulk-purchase-form__product-price' data-column='Precio'>" . format_currency_colones($product->get_price()) . "</td>";
+            // Added data-price attribute
+            echo "<td class='bulk-purchase-form__product-price' data-column='Precio' data-price='" . esc_attr($product->get_price()) . "'>" . format_currency_colones($product->get_price()) . "</td>";
             echo "<td class='bulk-purchase-form__product-quantity' data-column='Cantidad'><input type='number' class='bulk-purchase-form__quantity-input' name='quantity[" . esc_attr($product->get_id()) . "]' value='" . esc_attr($current_qty) . "' min='0' step='1' inputmode='numeric' pattern='[0-9]*'></td>";
             echo "<td class='bulk-purchase-form__product-total' data-column='Total'>₡0.00</td>";
             echo "</tr>";

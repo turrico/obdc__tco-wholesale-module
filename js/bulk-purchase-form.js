@@ -4,6 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const quantityInputs = document.querySelectorAll('.bulk-purchase-form__quantity-input');
     const stickyHeader = document.querySelector('.bulk-purchase-form__sticky-header');
 
+    // Check if inputs were found to debug potential loading issues
+    if (quantityInputs.length === 0) {
+        console.warn('No quantity inputs found for bulk purchase form.');
+    }
+
     const formatter = new Intl.NumberFormat('es-CR', {
         style: 'currency',
         currency: 'CRC',
@@ -36,9 +41,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         quantityInputs.forEach(input => {
             const row = input.closest('.bulk-purchase-form__product-row');
-            const priceText = row.querySelector('.bulk-purchase-form__product-price').textContent;
-            // Fix: Remove '₡', remove thousands separator (.), replace decimal separator (,) with (.)
-            const price = parseFloat(priceText.replace('₡', '').replace(/\./g, '').replace(',', '.').trim());
+            
+            // ROBUST PRICE PARSING: Use data-price attribute instead of text content
+            const priceCell = row.querySelector('.bulk-purchase-form__product-price');
+            let price = 0;
+
+            if (priceCell && priceCell.dataset.price) {
+                price = parseFloat(priceCell.dataset.price);
+            } else {
+                // Fallback (should not be reached if HTML is correct)
+                console.warn('Missing data-price attribute, attempting fallback parse');
+                const priceText = priceCell ? priceCell.textContent : '0';
+                price = parseFloat(priceText.replace('₡', '').replace(/\./g, '').replace(',', '.').trim());
+            }
             
             // Parse quantity, defaulting to 0 if NaN (empty or invalid)
             let quantity = parseInt(input.value, 10);
@@ -49,12 +64,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const lineTotal = price * quantity;
 
             const totalCell = row.querySelector('.bulk-purchase-form__product-total');
-            totalCell.textContent = formatter.format(lineTotal);
+            if (totalCell) {
+                totalCell.textContent = formatter.format(lineTotal);
+            }
 
             mainTotal += lineTotal;
         });
 
-        document.querySelector('#orderTotal').textContent = formatter.format(mainTotal);
+        const orderTotalElement = document.querySelector('#orderTotal');
+        if (orderTotalElement) {
+            orderTotalElement.textContent = formatter.format(mainTotal);
+        }
     }
 
     quantityInputs.forEach(input => {
