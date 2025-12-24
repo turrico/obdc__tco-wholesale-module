@@ -88,11 +88,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const priceCell = row.querySelector('.bulk-purchase-form__product-price');
             let price = 0;
 
+            // Debugging: Check where price is coming from
             if (priceCell && priceCell.dataset.price) {
                 price = parseFloat(priceCell.dataset.price);
             } else {
+                console.warn('Fallback parsing price for row:', row);
                 const priceText = priceCell ? priceCell.textContent : '0';
                 price = parseFloat(priceText.replace('₡', '').replace(/\./g, '').replace(',', '.').trim());
+            }
+            
+            if (isNaN(price)) {
+                console.error('Price is NaN for row:', row);
+                price = 0;
             }
             
             let quantity = parseInt(input.value, 10);
@@ -101,6 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const lineTotal = price * quantity;
+
+            // Debug calculation for specific rows with quantity > 0
+            if (quantity > 0) {
+                console.log(`Row Calc: Price=${price}, Qty=${quantity}, Total=${lineTotal}`);
+            }
 
             const totalCell = row.querySelector('.bulk-purchase-form__product-total');
             if (totalCell) {
