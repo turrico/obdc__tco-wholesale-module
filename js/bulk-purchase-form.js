@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const quantityInputs = document.querySelectorAll('.bulk-purchase-form__quantity-input');
     const stickyHeader = document.querySelector('.bulk-purchase-form__sticky-header');
 
+    console.log(`Found ${quantityInputs.length} quantity inputs.`);
+
     if (quantityInputs.length === 0) {
         console.warn('No quantity inputs found for bulk purchase form.');
     }
@@ -81,10 +83,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateTotals() {
+        // console.log('updateTotals running...'); // Uncomment to spam logs if needed
         let mainTotal = 0;
 
-        quantityInputs.forEach(input => {
+        quantityInputs.forEach((input, index) => {
             const row = input.closest('.bulk-purchase-form__product-row');
+            if (!row) {
+                console.error('Row not found for input index:', index);
+                return;
+            }
+
             const priceCell = row.querySelector('.bulk-purchase-form__product-price');
             let price = 0;
 
@@ -92,14 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (priceCell && priceCell.dataset.price) {
                 price = parseFloat(priceCell.dataset.price);
             } else {
-                console.warn('Fallback parsing price for row:', row);
+                // If this triggers, it means shortcodes.php didn't output data-price
+                // console.warn('Fallback parsing price for row:', row); 
                 const priceText = priceCell ? priceCell.textContent : '0';
                 price = parseFloat(priceText.replace('₡', '').replace(/\./g, '').replace(',', '.').trim());
-            }
-            
-            if (isNaN(price)) {
-                console.error('Price is NaN for row:', row);
-                price = 0;
             }
             
             let quantity = parseInt(input.value, 10);
@@ -117,6 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const totalCell = row.querySelector('.bulk-purchase-form__product-total');
             if (totalCell) {
                 totalCell.textContent = formatter.format(lineTotal);
+            } else {
+                console.error('Total cell not found in row');
             }
 
             mainTotal += lineTotal;
@@ -125,6 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const orderTotalElement = document.querySelector('#orderTotal');
         if (orderTotalElement) {
             orderTotalElement.textContent = formatter.format(mainTotal);
+        } else {
+            console.error('#orderTotal element not found');
         }
     }
 
