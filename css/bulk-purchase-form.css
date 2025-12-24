@@ -63,6 +63,12 @@
     color: var(--text-dark);
 }
 
+/* Force Spin Buttons (Arrows) Visibility */
+.bulk-purchase-form .bulk-purchase-form__quantity-input::-webkit-inner-spin-button, 
+.bulk-purchase-form .bulk-purchase-form__quantity-input::-webkit-outer-spin-button { 
+    opacity: 1;
+}
+
 .bulk-purchase-form .mobile-product-header {
     display: none;
 }
@@ -82,7 +88,7 @@
     .bulk-purchase-form .bulk-purchase-form__table tbody.product-group {
         display: block;
         background-color: var(--white, #fff);
-        margin-bottom: 0; /* Removed margin between products */
+        margin-bottom: 0;
         border-bottom: 1px solid var(--base-light);
         overflow: visible;
         position: relative;
@@ -100,7 +106,7 @@
         z-index: 50;
         background-color: var(--primary-ultra-light);
         color: var(--primary-dark);
-        width: 100%; /* Inherits 100vw from tbody */
+        width: 100%;
         border-bottom: 1px solid var(--primary-light);
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
@@ -134,7 +140,7 @@
     .bulk-purchase-form .bulk-purchase-form__product-row {
         display: flex;
         flex-wrap: wrap;
-        padding: var(--space-m) var(--space-m); /* Added side padding to match text alignment */
+        padding: var(--space-m) var(--space-m);
         border-bottom: 1px solid var(--base-ultra-light);
     }
     

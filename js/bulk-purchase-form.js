@@ -26,9 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to calculate and set the sticky offset
     function updateStickyOffset() {
         if (stickyHeader && form) {
-            // Using requestAnimationFrame for smoother visual updates during resize if needed,
-            // but for a simple height calculation, direct access is usually fine.
-            // Debouncing is the primary performance gain here.
             const height = stickyHeader.offsetHeight;
             form.style.setProperty('--sticky-header-height', height + 'px');
         }
@@ -42,7 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const priceText = row.querySelector('.bulk-purchase-form__product-price').textContent;
             // Fix: Remove '₡', remove thousands separator (.), replace decimal separator (,) with (.)
             const price = parseFloat(priceText.replace('₡', '').replace(/\./g, '').replace(',', '.').trim());
-            const quantity = parseInt(input.value, 10);
+            
+            // Parse quantity, defaulting to 0 if NaN (empty or invalid)
+            let quantity = parseInt(input.value, 10);
+            if (isNaN(quantity)) {
+                quantity = 0;
+            }
+
             const lineTotal = price * quantity;
 
             const totalCell = row.querySelector('.bulk-purchase-form__product-total');
@@ -55,6 +58,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     quantityInputs.forEach(input => {
+        // Select all text on focus to prevent "60" error when typing "6"
+        input.addEventListener('focus', function() {
+            this.select();
+        });
+
+        // Reset to 0 if left empty on blur
+        input.addEventListener('blur', function() {
+            if (this.value === '' || isNaN(parseInt(this.value, 10))) {
+                this.value = '0';
+                updateTotals();
+            }
+        });
+
         input.addEventListener('change', updateTotals);
         input.addEventListener('input', updateTotals);
     });
