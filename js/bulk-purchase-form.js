@@ -58,9 +58,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     quantityInputs.forEach(input => {
-        // Select all text on focus to prevent "60" error when typing "6"
+        // IMPROVED UX: Clear '0' on focus instead of selecting text. 
+        // This avoids triggering the mobile OS copy/paste menu ("secondary menu").
         input.addEventListener('focus', function() {
-            this.select();
+            if (this.value === '0') {
+                this.value = '';
+            }
         });
 
         // Reset to 0 if left empty on blur
